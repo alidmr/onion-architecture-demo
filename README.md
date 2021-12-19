@@ -1,5 +1,3 @@
-# onion-architecture-demo
-
 # Onion Architecture - Soğan Mimarisi
 
 En iç tarafta domain modellerinin olduğu bir yapı. Asıl amaç gevşek bağlılık - loose coupling oluşturabilmek.  Herhangi bir değişiklik olduğunda örneğin user interface mvc den react a geçti, böyle bir durumda çok az bir efor ile geçiş işlemini yapmak.
