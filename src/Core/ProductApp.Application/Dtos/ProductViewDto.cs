@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProductApp.Application.Dto
+namespace ProductApp.Application.Dtos
 {
     public class ProductViewDto
     {

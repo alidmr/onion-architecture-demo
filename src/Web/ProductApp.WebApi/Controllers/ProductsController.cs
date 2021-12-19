@@ -1,9 +1,10 @@
-﻿using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using ProductApp.Application.Dto;
-using ProductApp.Application.Interfaces.Repository;
+using ProductApp.Application.Features.Commands.CreateProduct;
+using ProductApp.Application.Features.Queries.GetAllProducts;
+using ProductApp.Application.Features.Queries.GetProductById;
 
 namespace ProductApp.WebApi.Controllers
 {
@@ -11,24 +12,37 @@ namespace ProductApp.WebApi.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IMediator _mediator;
 
-        public ProductsController(IProductRepository productRepository)
+        public ProductsController(IMediator mediator)
         {
-            _productRepository = productRepository;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAllProduct()
         {
-            var allList = await _productRepository.GetAllAsync();
-            // burada alllist product entity dönüyor. api den domaine erişmiş oluyoruz. erişim olmaması daha güzel olur.
+            var query = new GetAllProductQuery();
 
-            var result = allList.Select(x => new ProductViewDto()
-            {
-                Id = x.Id,
-                Name = x.Name
-            }).ToList();
+            var result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct(CreateProductCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProductById(Guid id)
+        {
+            var query = new GetProductByIdQuery() { Id = id };
+
+            var result = await _mediator.Send(query);
 
             return Ok(result);
         }
